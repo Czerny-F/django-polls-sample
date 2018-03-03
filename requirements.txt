@@ -1,2 +1,4 @@
 ipython
 Django~=1.11
+django-extensions
+Werkzeug
