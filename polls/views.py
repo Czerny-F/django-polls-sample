@@ -1,9 +1,30 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import generic
 from django.utils import timezone
 from .models import Question, Choice
+from .forms import QuestionForm
+
+
+class CreateView(generic.CreateView):
+    form_class = QuestionForm
+    success_url = reverse_lazy('polls:index')
+    template_name = 'polls/form.html'
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.request.user
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        # kwargs['user'] = self.request.user
+        return kwargs
 
 
 class IndexView(generic.ListView):
